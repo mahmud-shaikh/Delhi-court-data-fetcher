@@ -4,10 +4,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from bs4 import BeautifulSoup
 
 # --- SETUP SELENIUM CHROME DRIVER ---
 options = Options()
-options.add_argument("--headless")  # Optional: runs in background
+# options.add_argument("--headless")  # Optional: runs in background
 driver = webdriver.Chrome(options=options)
 
 try:
@@ -46,17 +47,70 @@ try:
 
  
     # Submit the form
-    submit_button = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.ID, "search"))
-    )
-    time.sleep(2)
+    # submit_button = WebDriverWait(driver, 10).until(
+    # EC.element_to_be_clickable((By.ID, "search"))
+    # )
+    # time.sleep(2)
+    # submit_button.click()
+
+    submit_button = wait.until(EC.element_to_be_clickable((By.ID, "search")))
     submit_button.click()
 
-    # # Wait for the result table to load
-    # wait.until(EC.presence_of_element_located((By.ID, "caseTable")))
-    # table = driver.find_element(By.ID, "caseTable")
-    # print("\n✅ Case Status Table Found:\n")
-    # print(table.text)
+    time.sleep(10)
+    html=driver.page_source
+    
+    def extract_case_table(html):
+        soup = BeautifulSoup(html, "html.parser")
+        table = soup.find("table", id="caseTable")
+        result = []
+
+        if not table:
+            return []
+
+        rows = table.find("tbody").find_all("tr")
+
+        for row in rows:
+            cols = row.find_all("td")
+
+            sno = cols[0].text.strip()
+
+            # Case Number and Status
+            case_text = cols[1].get_text(separator=" ", strip=True)
+            order_link = cols[1].find("a", string="Orders")
+            order_url = order_link["href"] if order_link else "Not available"
+
+            # Petitioner vs Respondent
+            parties = cols[2].get_text(separator=" ", strip=True)
+
+            # Listing Info
+            listing_info = cols[3].get_text(separator=" | ", strip=True)
+
+            result.append({
+                "S.No.": sno,
+                "Diary No. / Case No.": case_text,
+                "Petitioner Vs. Respondent": parties,
+                "Listing Date / Court No.": listing_info,
+                "Order Link": order_url
+            })
+
+        return result
+
+    # Let JS load the result
+
+    cases = extract_case_table(html)
+    print(f"Cases: {cases}")
+
+    # Pretty-print the result
+    for case in cases:
+        for k, v in case.items():
+            print(f"{k}: {v}")
+        print("-" * 50)
+
+        # # Wait for the result table to load
+        # wait.until(EC.presence_of_element_located((By.ID, "caseTable")))
+        # table = driver.find_element(By.ID, "caseTable")
+        # print("\n✅ Case Status Table Found:\n")
+        # print(table.text)
 
 except Exception as e:
     print(f"❌ Error: {e}")
