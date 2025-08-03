@@ -1,12 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head><title>Result</title></head>
-<body>
-  <h2>Case Details</h2>
-  <p><strong>Case Title:</strong> {{ data.case_title }}</p>
-  <p><strong>Filing Date:</strong> {{ data.filing_date }}</p>
-  <p><strong>Next Hearing:</strong> {{ data.next_hearing }}</p>
-  <p><a href="{{ data.latest_order_link }}">Download Latest Order PDF</a></p>
-  <a href="/">Search Another</a>
-</body>
-</html>
+<h2>Case Search Result</h2>
+
+{% if results %}
+  <h3>Matching Results ({{ results|length }})</h3>
+  <table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Sr No.</th>
+        <th>Diary No. / Case No. [Status]</th>
+        <th>Petitioner vs Respondent</th>
+        <th>Listing Data / Court No.</th>
+        <th>Order Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in results %}
+        <tr>
+          <td>{{ item.sr_no }}</td>
+          <td>{{ item.case }}</td>
+          <td>{{ item.parties }}</td>
+          <td>{{ item.listing_date }}</td>
+          <td><a href="{{ item.order_link}}">{{ item.order_link_text }}</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No results found.</p>
+{% endif %}
+
+<br>
+<a href="/">🔙 Search again</a>

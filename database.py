@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 def init_db():
     conn = sqlite3.connect('database.db')
@@ -9,19 +10,21 @@ def init_db():
             case_type TEXT,
             case_number TEXT,
             year TEXT,
-            response TEXT
+            response TEXT,
+            timestamp TEXT 
         )
     ''')
     conn.commit()
-    conn.close()
+    return conn
 
-def log_query(case_type, case_number, year, response):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("INSERT INTO logs (case_type, case_number, year, response) VALUES (?, ?, ?, ?)",
-              (case_type, case_number, year, response))
+def log_query(conn, case_type, case_number, year, response):
+    # conn = sqlite3.connect('database.db')
+    # c = conn.cursor()
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    conn.execute("INSERT INTO logs (case_type, case_number, year, response, timestamp) VALUES (?, ?, ?, ?, ?)",
+              (case_type, case_number, year, response, timestamp))
     conn.commit()
-    conn.close()
 
-# Run this once
-init_db()
+def close_conn(conn):
+    # Close connection
+    conn.close()
