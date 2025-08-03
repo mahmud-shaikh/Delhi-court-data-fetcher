@@ -1,32 +1,110 @@
-<h2>Case Search Result</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Case Search Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 40px;
+        }
 
-{% if results %}
-  <h3>Matching Results ({{ results|length }})</h3>
-  <table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Sr No.</th>
-        <th>Diary No. / Case No. [Status]</th>
-        <th>Petitioner vs Respondent</th>
-        <th>Listing Data / Court No.</th>
-        <th>Order Link</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in results %}
-        <tr>
-          <td>{{ item.sr_no }}</td>
-          <td>{{ item.case }}</td>
-          <td>{{ item.parties }}</td>
-          <td>{{ item.listing_date }}</td>
-          <td><a href="{{ item.order_link}}">{{ item.order_link_text }}</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% else %}
-  <p>No results found.</p>
-{% endif %}
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: auto;
+        }
 
-<br>
-<a href="/">🔙 Search again</a>
+        h2, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #fbbf24;
+            color: white;
+        }
+
+        td a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #555;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 16px;
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Case Search Result</h2>
+
+        {% if results %}
+            <h3>Matching Results ({{ results|length }})</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sr No.</th>
+                        <th>Diary No. / Case No. [Status]</th>
+                        <th>Petitioner vs Respondent</th>
+                        <th>Listing Date / Court No.</th>
+                        <th>Order Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                        <tr>
+                            <td>{{ item.sr_no }}</td>
+                            <td>{{ item.case }}</td>
+                            <td>{{ item.parties }}</td>
+                            <td>{{ item.listing_date }}</td>
+                            <td><a href="{{ item.order_link }}" target="_blank">{{ item.order_link_text }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-results">No results found.</p>
+        {% endif %}
+
+        <a href="/" class="back-link">🔙 Search again</a>
+    </div>
+</body>
+</html>
