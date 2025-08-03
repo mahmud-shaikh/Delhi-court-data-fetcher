@@ -35,7 +35,6 @@ def index():
 
 @app.route('/result', methods=['POST'])
 def result():
-    print("PRINTED FROM RESULT")
     case_type = request.form['case_type']
     case_number = request.form['case_number']
     year = request.form['year']

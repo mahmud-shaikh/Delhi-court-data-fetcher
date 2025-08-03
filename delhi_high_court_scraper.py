@@ -18,9 +18,6 @@ def fetch_case_data(case_type, case_number, year):
     try:
         driver.get("https://delhihighcourt.nic.in/app/get-case-type-status")
 
-        with open("response_output_1.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
-
         wait = WebDriverWait(driver, 10)
 
         # Wait until all form fields are present
@@ -36,7 +33,6 @@ def fetch_case_data(case_type, case_number, year):
 
         # Get captcha text from span
         captcha_value = driver.find_element(By.ID, "captcha-code").text.strip()
-        print(f"captcha value: {captcha_value}")
 
         # Now wait for the input box to type captcha (this may be dynamically added)
         wait.until(EC.presence_of_element_located((By.ID, "captchaInput")))
@@ -45,31 +41,18 @@ def fetch_case_data(case_type, case_number, year):
 
 
         entered = captcha_input_element.get_attribute("value")
-        # print("Entered Captcha:", entered)
 
-    
-        # Submit the form
-        # submit_button = WebDriverWait(driver, 10).until(
-        # EC.element_to_be_clickable((By.ID, "search"))
-        # )
-        # time.sleep(2)
-        # submit_button.click()
-        # submit_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='search']")))
-        # submit_button.click()
         submit_button = wait.until(EC.element_to_be_clickable((By.ID, "search")))
         submit_button.click()
         
         time.sleep(3)
-        # Save final response
-        with open("response_after_submit.html", "w", encoding="utf-8") as f:
-            f.write(driver.page_source)
+
         html=driver.page_source
 
         log_query(conn, "CRL.M.C.", "1474", "2022", html)
 
         # Let JS load the result
         cases = extract_case_table(html, driver)
-        print(f"Cases: {cases}")
 
         return cases
 

@@ -23,11 +23,9 @@ def extract_case_table(html, driver):
         case_text = cols[1].get_text(separator=" ", strip=True)
         order_link = cols[1].find("a", string="Orders")
         order_url = order_link["href"] if order_link else "Not available"
-        print(f"ORDER_URL ->>>>>>>>>>>>> {order_url}")
 
         # Create and invoke a new function that calls the ORDERS link and fetch the first 2 links
         order_link_data = fetch_case_links(order_url, driver)
-        print(f"ORDER LINK DATA: {order_link_data}")
 
         # Petitioner vs Respondent
         parties = cols[2].get_text(separator=" ", strip=True)
@@ -44,8 +42,6 @@ def extract_case_table(html, driver):
             "order_link_text": order_link_data["order_link_text"]
         })
 
-    print(f"RESULT: {result}")
-
     return result
 
 
@@ -60,7 +56,6 @@ def fetch_case_links(order_link, driver):
     time.sleep(10)
 
     case_table_value = driver.find_element(By.ID, "caseTable").text.strip()
-    # print(f"case table value: {case_table_value}")
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     table = soup.find("table", id="caseTable")
@@ -72,9 +67,6 @@ def fetch_case_links(order_link, driver):
     first_order_link_element = table.find("tbody").find("a")
     order_link = first_order_link_element["href"]
     order_link_text = first_order_link_element.text.strip()
-    print(f"First Order Link: {first_order_link_element}")
-    print(f"Order Link: {order_link}")
-    print(f"Order Link Text: {order_link_text}")
 
     with open("response_output_2.html", "w", encoding="utf-8") as f:
         f.write(driver.page_source)
