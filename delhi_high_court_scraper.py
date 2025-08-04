@@ -43,13 +43,14 @@ def fetch_case_data(case_type, case_number, year):
         entered = captcha_input_element.get_attribute("value")
 
         submit_button = wait.until(EC.element_to_be_clickable((By.ID, "search")))
+        time.sleep(1)
         submit_button.click()
         
-        time.sleep(3)
+        time.sleep(1)
 
         html=driver.page_source
 
-        log_query(conn, "CRL.M.C.", "1474", "2022", html)
+        log_query(conn,case_type,case_number,year,html)
 
         # Let JS load the result
         cases = extract_case_table(html, driver)
