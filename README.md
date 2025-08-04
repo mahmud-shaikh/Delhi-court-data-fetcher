@@ -16,7 +16,7 @@ Website: [https://delhihighcourt.nic.in/app/get-case-type-status](https://delhih
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/court-data-fetcher.git
+git clone https://github.com/mahmud-shaikh/Delhi-court-data-fetcher
 cd court-data-fetcher
 ```
 
