@@ -11,7 +11,7 @@ from utils import extract_case_table
 def fetch_case_data(case_type, case_number, year):
     # --- SETUP SELENIUM CHROME DRIVER ---
     options = Options()
-    # options.add_argument("--headless")  # Optional: runs in background
+    options.add_argument("--headless")  # Optional: runs in background
     driver = webdriver.Chrome(options=options)
     conn = init_db()
 
